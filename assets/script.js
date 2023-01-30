@@ -2,7 +2,8 @@
 let apiKey = "82c5cfb47d6e85cd369108ab5201240b";
 
 // DOM elements
-
+let searchButton = document.querySelector("#search-button");
+let searchInput = document.querySelector("#search-input");
 let cityButtons = document.querySelector(".city-buttons");
 let weatherToday = document.querySelector("#today");
 
@@ -34,6 +35,7 @@ function renderCities(cities) {
 searchButton.addEventListener("click", function (event) {
     event.preventDefault();
       let city = searchInput.value;
+      weatherSearch(city);
         if (!cities.includes(city)) {
       cities.push(city);
       savedCities();
@@ -83,7 +85,8 @@ cityButtons.addEventListener("click", function (event) {
       console.log(cityData);
       renderWeather(cityData);
     });
-
+  }
+  
 //obtaining weather icon
 function renderWeather(weatherData) {
   let cityName = weatherData.city.name;
@@ -99,4 +102,4 @@ function renderWeather(weatherData) {
   <p>Humidity</p>`;
 
   weatherToday.innerHTML = html;
-}}
+}
