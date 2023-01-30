@@ -6,6 +6,7 @@ let searchButton = document.querySelector("#search-button");
 let searchInput = document.querySelector("#search-input");
 let cityButtons = document.querySelector(".city-buttons");
 let weatherToday = document.querySelector("#today");
+let weatherForecast = document.querySelector("#forecast");
 
 let cities = [];
 
@@ -101,5 +102,61 @@ function renderWeather(weatherData) {
   <p>Wind speed: ${Math.floor(weatherData.list[0].wind.speed)} knots</p>
   <p>Humidity: ${Math.floor(weatherData.list[0].main.humidity)}%</p>`;
 
-  weatherToday.innerHTML = html;
+  weatherToday.innerHTML = htmlWeatherToday;
 }
+
+function forecastData(apiKey, cityName, weatherForecast) {
+    // obtaining data for forecast
+    let queryURL3 =
+      `https://api.openweathermap.org/data/2.5/forecast?q=` +
+      cityName +
+      `&units=metric&appid=` +
+      apiKey;
+  
+    fetch(queryURL3)
+      .then((response) => response.json())
+      .then(function (response5Day) {
+          const filteredList = response5Day.list.filter(function (item) {
+          return item.dt_txt.endsWith("12:00:00");
+        });
+        console.log("filteredList", filteredList);
+  
+        renderForecast(filteredList, weatherForecast, response5Day);
+      });
+  }
+
+  // saving in local storage
+  function storeWeatherToday(cityData) {
+    localStorage.setItem("weatherToday", JSON.stringify(cityData));
+  }
+
+  function renderForecast(filteredList, weatherForecast, response5Day) {
+    // obtaining weather forecast every day at the same time
+    for (let i = 0; i < 5; i++) {
+      console.log(moment(filteredList[i].dt, "X").format("DD/MM/YYYY, HH:mm:ss"));
+  
+      // obtaining weather icon
+      let iconCode = response5Day.list[i].weather[0].icon;
+      console.log(iconCode);
+      let iconURL = `http://openweathermap.org/img/wn/${iconCode}@2x.png`;
+      console.log(iconURL);
+  
+      // displaying forecast
+      let forecastCard = `<div class="card" style="width: 10rem">
+      <div class="card-body">
+        <h5 class="card-title">${moment(filteredList[i].dt, "X").format(
+          "DD/MM/YYYY"
+        )}</h5>
+        <h6 class="card-subtitle mb-2 text-muted"> <img src='${iconURL}'></h6>
+        <p class="card-text">Temp: ${Math.floor(
+          filteredList[i].main.temp
+        )} &#8451</p>
+        <p class="card-text">Wind: ${filteredList[i].wind.speed} KPH</p>
+        <p class="card-text">Humidity: ${filteredList[i].main.humidity} %</p>
+      </div>`;
+  
+      weatherForecast.innerHTML += forecastCard;
+    }
+    // Storing forecast
+    localStorage.setItem("forecastHTML", weatherForecast.innerHTML);
+  }
