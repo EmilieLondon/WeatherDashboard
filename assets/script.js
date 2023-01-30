@@ -19,14 +19,27 @@ function init() {
     cities = savedCities;
   }
   renderCities(cities);
+
+
+ // Displaying saved data
+ let storedWeatherToday = JSON.parse(localStorage.getItem("weatherToday"));
+ if (storedWeatherToday) {
+   renderWeather(storedWeatherToday);
+ }
+
+ let forecast = (weatherForecast.innerHTML =
+   localStorage.getItem("forecastHTML"));
+  if (forecast) {
+   forecastHTML = forecast;
+ }
 }
 
-//create buttons
+//create city buttons
 function renderCities(cities) {
   cityButtons.innerHTML = "";
   for (let i = 0; i < cities.length; i++) {
     const city = cities[i];
-    let cityButton = document.createElement("li");
+    let cityButton = document.createElement("button");
     cityButton.innerHTML = city;
     cityButtons.prepend(cityButton);
   }
@@ -35,9 +48,10 @@ function renderCities(cities) {
 // Formatting search button and pushing cities
 searchButton.addEventListener("click", function (event) {
     event.preventDefault();
+    weatherForecast.innerHTML= "";
       let city = searchInput.value;
       weatherSearch(city);
-        if (!cities.includes(city)) {
+        if (city !== "" && !cities.includes(city)) {
       cities.push(city);
       savedCities();
     }
@@ -52,7 +66,8 @@ function savedCities() {
 
 //Formating city buttons to trigger weather search
 cityButtons.addEventListener("click", function (event) {
-    if (event.target.matches("li")) {
+    weatherForecast.innerHTML= "";
+    if (event.target.matches("button")) {
       console.log(event.target);
       let cityName = event.target.textContent;
       console.log(cityName);
@@ -85,7 +100,9 @@ cityButtons.addEventListener("click", function (event) {
     .then((cityData) => {
       console.log(cityData);
       renderWeather(cityData);
+      storeWeatherToday(cityData);
     });
+forecastSearch(apiKey, cityName, weatherForecast);
   }
 
 //obtaining weather icon
@@ -95,7 +112,7 @@ function renderWeather(weatherData) {
   let iconURL = `http://openweathermap.org/img/wn/${iconCode}@2x.png`;
 
   console.log(cityName);
-  let html = `<h1>${cityName} (${moment(weatherData.dt).format(
+  let htmlWeatherToday = `<h1>${cityName} (${moment(weatherData.dt).format(
     "DD/MM/YYYY"
   )}) <img src='${iconURL}'></h1>
   <p>Temperature: ${Math.floor(weatherData.list[0].main.temp)} &#8451</p>
@@ -105,8 +122,13 @@ function renderWeather(weatherData) {
   weatherToday.innerHTML = htmlWeatherToday;
 }
 
+// saving data to local storage
+function storeWeatherToday(cityData) {
+    localStorage.setItem("weatherToday", JSON.stringify(cityData));
+  }
+
+  // obtaining data for forecast
 function forecastData(apiKey, cityName, weatherForecast) {
-    // obtaining data for forecast
     let queryURL3 =
       `https://api.openweathermap.org/data/2.5/forecast?q=` +
       cityName +
@@ -142,20 +164,18 @@ function forecastData(apiKey, cityName, weatherForecast) {
       console.log(iconURL);
   
       // displaying forecast
-      let forecastCard = `<div class="card" style="width: 10rem">
-      <div class="card-body">
-        <h5 class="card-title">${moment(filteredList[i].dt, "X").format(
+      let forecastWeather = `${moment(filteredList[i].dt, "X").format(
           "DD/MM/YYYY"
-        )}</h5>
-        <h6 class="card-subtitle mb-2 text-muted"> <img src='${iconURL}'></h6>
-        <p class="card-text">Temp: ${Math.floor(
+        )}
+        <img src='${iconURL}'>
+        <p>Temperature: ${Math.floor(
           filteredList[i].main.temp
         )} &#8451</p>
-        <p class="card-text">Wind: ${filteredList[i].wind.speed} KPH</p>
-        <p class="card-text">Humidity: ${filteredList[i].main.humidity} %</p>
+        <p>Wind speed: ${filteredList[i].wind.speed} knots</p>
+        <p>Humidity: ${filteredList[i].main.humidity}%</p>
       </div>`;
   
-      weatherForecast.innerHTML += forecastCard;
+      weatherForecast.innerHTML += forecastWeather;
     }
     // Storing forecast
     localStorage.setItem("forecastHTML", weatherForecast.innerHTML);
