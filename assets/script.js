@@ -86,7 +86,7 @@ cityButtons.addEventListener("click", function (event) {
       renderWeather(cityData);
     });
   }
-  
+
 //obtaining weather icon
 function renderWeather(weatherData) {
   let cityName = weatherData.city.name;
@@ -97,9 +97,9 @@ function renderWeather(weatherData) {
   let html = `<h1>${cityName} (${moment(weatherData.dt).format(
     "DD/MM/YYYY"
   )}) <img src='${iconURL}'></h1>
-  <p>Temp: ${Math.floor(weatherData.list[0].main.temp)} &#8451</p>
-  <p>Wind</p>
-  <p>Humidity</p>`;
+  <p>Temperature: ${Math.floor(weatherData.list[0].main.temp)} &#8451</p>
+  <p>Wind speed: ${Math.floor(weatherData.list[0].wind.speed)} knots</p>
+  <p>Humidity: ${Math.floor(weatherData.list[0].main.humidity)}%</p>`;
 
   weatherToday.innerHTML = html;
 }
