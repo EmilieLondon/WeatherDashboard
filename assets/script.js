@@ -30,6 +30,15 @@ function renderCities(cities) {
   }
 }
 
+// Formatting search button and pushing cities
+searchButton.addEventListener("click", function (event) {
+    event.preventDefault();
+      let city = searchInput.value;
+        if (!cities.includes(city)) {
+      cities.push(city);
+      storeCitites();
+    }
+
   // linking 2 URLs to obtain required data
   let queryURL1 =
     `https://api.openweathermap.org/geo/1.0/direct?q=${cityName}&limit=5&appid=` +
@@ -71,4 +80,4 @@ function renderWeather(weatherData) {
   <p>Humidity</p>`;
 
   weatherToday.innerHTML = html;
-}
+}})
