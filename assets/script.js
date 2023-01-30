@@ -47,7 +47,18 @@ function savedCities() {
   renderCities(cities);
 });
 
-  // linking 2 URLs to obtain required data
+//Formating city buttons to trigger weather search
+cityButtons.addEventListener("click", function (event) {
+    if (event.target.matches("li")) {
+      console.log(event.target);
+      let cityName = event.target.textContent;
+      console.log(cityName);
+      weatherSearch(cityName);
+    }
+  });
+
+  function weatherSearch(cityName) {
+      // linking 2 URLs to obtain required data
   let queryURL1 =
     `https://api.openweathermap.org/geo/1.0/direct?q=${cityName}&limit=5&appid=` +
     apiKey;
@@ -88,4 +99,4 @@ function renderWeather(weatherData) {
   <p>Humidity</p>`;
 
   weatherToday.innerHTML = html;
-}})
+}}
