@@ -36,8 +36,16 @@ searchButton.addEventListener("click", function (event) {
       let city = searchInput.value;
         if (!cities.includes(city)) {
       cities.push(city);
-      storeCitites();
+      savedCities();
     }
+
+//using local storage to save and retrieve cities
+function savedCities() {
+    localStorage.setItem("cities", JSON.stringify(cities));
+    console.log(localStorage);
+  }
+  renderCities(cities);
+});
 
   // linking 2 URLs to obtain required data
   let queryURL1 =
