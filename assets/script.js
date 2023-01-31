@@ -40,6 +40,7 @@ function renderCities(cities) {
   for (let i = 0; i < cities.length; i++) {
     const city = cities[i];
     let cityButton = document.createElement("button");
+    cityButton.classList.add("list-group-item", "list-group-item-action");
     cityButton.innerHTML = city;
     cityButtons.prepend(cityButton);
   }
@@ -75,7 +76,8 @@ cityButtons.addEventListener("click", function (event) {
     }
   });
 
-  function weatherSearch(cityName) {
+//   Weather today
+function weatherSearch(cityName) {
       // linking 2 URLs to obtain required data
   let queryURL1 =
     `https://api.openweathermap.org/geo/1.0/direct?q=${cityName}&limit=5&appid=` +
@@ -102,8 +104,9 @@ cityButtons.addEventListener("click", function (event) {
       renderWeather(cityData);
       storeWeatherToday(cityData);
     });
-forecastSearch(apiKey, cityName, weatherForecast);
-  }
+
+    forecastData(apiKey, cityName, weatherForecast);
+}
 
 //obtaining weather icon
 function renderWeather(weatherData) {
@@ -112,10 +115,8 @@ function renderWeather(weatherData) {
   let iconURL = `http://openweathermap.org/img/wn/${iconCode}@2x.png`;
 
   console.log(cityName);
-  let htmlWeatherToday = `<h1>${cityName} (${moment(weatherData.dt).format(
-    "DD/MM/YYYY"
-  )}) <img src='${iconURL}'></h1>
-  <p>Temperature: ${Math.floor(weatherData.list[0].main.temp)} &#8451</p>
+  let htmlWeatherToday = `<h4>${cityName}</h4> <h5>(${moment(weatherData.dt).format("DD/MM/YYYY")})</h5> <img width="100" height="100" src='${iconURL}'>
+   <p>Temperature: ${Math.floor(weatherData.list[0].main.temp)}&#8451</p>
   <p>Wind speed: ${Math.floor(weatherData.list[0].wind.speed)} knots</p>
   <p>Humidity: ${Math.floor(weatherData.list[0].main.humidity)}%</p>`;
 
@@ -125,8 +126,9 @@ function renderWeather(weatherData) {
 // saving data to local storage
 function storeWeatherToday(cityData) {
     localStorage.setItem("weatherToday", JSON.stringify(cityData));
-  }
+}
 
+//   Weather forecast
   // obtaining data for forecast
 function forecastData(apiKey, cityName, weatherForecast) {
     let queryURL3 =
@@ -145,14 +147,9 @@ function forecastData(apiKey, cityName, weatherForecast) {
   
         renderForecast(filteredList, weatherForecast, response5Day);
       });
-  }
+}
 
-  // saving in local storage
-  function storeWeatherToday(cityData) {
-    localStorage.setItem("weatherToday", JSON.stringify(cityData));
-  }
-
-  function renderForecast(filteredList, weatherForecast, response5Day) {
+function renderForecast(filteredList, weatherForecast, response5Day) {
     // obtaining weather forecast every day at the same time
     for (let i = 0; i < 5; i++) {
       console.log(moment(filteredList[i].dt, "X").format("DD/MM/YYYY, HH:mm:ss"));
@@ -164,16 +161,10 @@ function forecastData(apiKey, cityName, weatherForecast) {
       console.log(iconURL);
   
       // displaying forecast
-      let forecastWeather = `${moment(filteredList[i].dt, "X").format(
-          "DD/MM/YYYY"
-        )}
-        <img src='${iconURL}'>
-        <p>Temperature: ${Math.floor(
-          filteredList[i].main.temp
-        )} &#8451</p>
-        <p>Wind speed: ${filteredList[i].wind.speed} knots</p>
-        <p>Humidity: ${filteredList[i].main.humidity}%</p>
-      </div>`;
+      let forecastWeather = `<div class="col-2 card"> <h5>${moment(filteredList[i].dt, "X").format("DD/MM/YYYY")}</h5> <img width="100" height="100" src='${iconURL}'>
+        <p>Temperature: ${Math.floor(filteredList[i].main.temp)} &#8451</p>
+        <p>Wind speed: ${Math.floor(filteredList[i].wind.speed)} knots</p>
+        <p>Humidity: ${Math.floor(filteredList[i].main.humidity)}%</p> </div>`;
   
       weatherForecast.innerHTML += forecastWeather;
     }
