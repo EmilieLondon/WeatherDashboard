@@ -21,7 +21,7 @@ When a user searches for a city they are presented with current and future condi
 
 https://emilielondon.github.io/WeatherDashboard
 
-<img width="740" alt="image" src="https://user-images.githubusercontent.com/91503119/215533155-4b86a592-80a1-42b9-9437-5d3e53629df8.png">
+![image](https://user-images.githubusercontent.com/91503119/215895301-2717e819-5be6-40de-9edb-7ddf1a86a78f.png)
 
 ## License
 MIT License
