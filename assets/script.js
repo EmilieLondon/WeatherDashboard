@@ -115,7 +115,7 @@ function renderWeather(weatherData) {
   let iconURL = `http://openweathermap.org/img/wn/${iconCode}@2x.png`;
 
   console.log(cityName);
-  let htmlWeatherToday = `<h4>${cityName}</h4> <h5>(${moment(weatherData.dt).format("DD/MM/YYYY")})</h5> <img width="100" height="100" src='${iconURL}'>
+  let htmlWeatherToday = `<h4>${cityName}</h4> <h5>${moment(weatherData.dt).format("DD/MM/YYYY")}</h5> <img width="100" height="100" src='${iconURL}'>
    <p>Temperature: ${Math.floor(weatherData.list[0].main.temp)}&#8451</p>
   <p>Wind speed: ${Math.floor(weatherData.list[0].wind.speed)} knots</p>
   <p>Humidity: ${Math.floor(weatherData.list[0].main.humidity)}%</p>`;
